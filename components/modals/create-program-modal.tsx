@@ -20,7 +20,6 @@ import { useSchoolModal } from "@/hooks/use-school-modal";
 import { Modal } from "../modal";
 import FileUpload from "../file-upload";
 import { useState } from "react";
-import { formCreateOperationSchema } from "@/constants/create-operation-schema";
 import { useRouter } from "next/navigation";
 import { Editor } from "../editor";
 import { formCreateProgramSchema } from "@/constaints-create/constants-program";
@@ -41,7 +40,8 @@ export const ProgramModal = () => {
 
   const { school } = data;
 
-  const form = useForm<z.infer<typeof formCreateProgramSchema>>({
+  const form = useForm<z.infer<typeof formCreateProgramSchema>>
+  ({
     resolver: zodResolver(formCreateProgramSchema),
     defaultValues: {
       name: "",
@@ -67,7 +67,7 @@ export const ProgramModal = () => {
       toast.success("Thêm ngành học thành công");
     } catch (error) {
       toast.error("Thêm ngành học thất bại " + error);
-    } finally {
+    }finally {
       onClose();
     }
   };

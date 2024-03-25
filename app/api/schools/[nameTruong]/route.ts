@@ -26,8 +26,7 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { nameTruong: string } }
-) {
+  { params }: { params: { nameTruong: string } }){
   try {
     const currentUser = await getCurrentUser();
 
@@ -48,7 +47,6 @@ export async function PATCH(
 
     return NextResponse.json(school);
   } catch (error) {
-    console.log("UPDATE_SCHOOL_BACKGROUND", error);
     return new NextResponse("Update error", { status: 500 });
   }
 }

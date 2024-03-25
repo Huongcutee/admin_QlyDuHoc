@@ -24,7 +24,7 @@ export async function POST(req: Request) {
         logoUrl,
       },
     });
-
+    
     return NextResponse.json(school);
   } catch (error) {
     console.log("CREATE USER", error);

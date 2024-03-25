@@ -80,7 +80,7 @@ const Des1Form = ({ program }: nameFormProps) => {
         ) : (
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit(onSubmit)}
+              onSubmit={form.handleSubmit(onSubmit)}  
               className="space-y-4 mt-4"
             >
               <FormField
