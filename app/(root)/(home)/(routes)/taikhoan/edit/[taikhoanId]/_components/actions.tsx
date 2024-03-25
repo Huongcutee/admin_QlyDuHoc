@@ -52,7 +52,7 @@ export const Actions = ({
       router.refresh();
       router.push(`/taikhoan`);
     } catch (error) {
-      toast.error("Xóa bài giảng thất bại");
+      toast.error("Xóa hồ sơ thất bại");
     } finally {
       setIsLoading(false);
     }

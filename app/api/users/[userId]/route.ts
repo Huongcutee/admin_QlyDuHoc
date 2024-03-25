@@ -1,8 +1,5 @@
 import getCurrentUser from "@/actions/get-current-user";
-import { formRoleSchema } from "@/constaints-edit/constants-user";
-import { formCreateUserSchema } from "@/constants/create-user-schema";
 import db from "@/lib/db";
-import { UserRole } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function PATCH(
@@ -88,5 +85,47 @@ export async function GET(
   } catch (error) {
     console.log("FIND USERS ERROR", error);
     return new NextResponse("Lỗi tìm người dùng", { status: 500 });
+  }
+}
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: { userId: string } }
+) {
+  try {
+    const { userId } = params;
+
+    // Kiểm tra xem userId có được cung cấp hay không
+    if (!userId) {
+      return new NextResponse("Không tìm thấy mã người dùng", { status: 404 });
+    }
+
+    // Tìm người dùng trong cơ sở dữ liệu dựa trên userId
+    const user = await db.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    // Nếu không tìm thấy người dùng, trả về lỗi 404
+    if (!user) {
+      return new NextResponse("Không tìm thấy người dùng", { status: 404 });
+    }
+
+    // Xóa người dùng từ cơ sở dữ liệu
+    await db.user.delete({
+      where: {
+        id: userId,
+      },
+    });
+
+    // Trả về phản hồi thành công
+    return new NextResponse("Xóa người dùng thành công", { status: 200 });
+  } catch (error) {
+    console.error("[API DELETE] Error:", error);
+    // Trả về lỗi nếu có vấn đề xảy ra trong quá trình xóa người dùng
+    return new NextResponse("Đã xảy ra lỗi khi xóa người dùng", {
+      status: 500,
+    });
   }
 }
