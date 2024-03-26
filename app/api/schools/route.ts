@@ -24,7 +24,7 @@ export async function POST(req: Request) {
         logoUrl,
       },
     });
-    
+
     return NextResponse.json(school);
   } catch (error) {
     console.log("CREATE USER", error);
@@ -53,10 +53,8 @@ export async function GET(req: Request) {
         requirement: true,
       },
     });
-    console.log(schools);
     return NextResponse.json(schools);
   } catch (error) {
-    console.log(error);
     return new NextResponse("Lấy thông tin trường học thất bại");
   }
 }

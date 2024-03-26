@@ -34,12 +34,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { PlusCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
-
 export function DataTable<TData, TValue>({
   columns,
   data,
@@ -48,6 +49,7 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
 
@@ -67,7 +69,10 @@ export function DataTable<TData, TValue>({
       columnVisibility,
     },
   });
-
+  const router = useRouter();
+  useEffect(() => {
+    router.refresh();
+  }, []);
   return (
     <div>
       <div className="flex items-center py-4 justify-between gap-x-2">

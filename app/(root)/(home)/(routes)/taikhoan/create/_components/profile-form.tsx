@@ -35,20 +35,29 @@ import { vi } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import Script from "next/script";
-import { Loader } from "@googlemaps/js-api-loader";
 import { useEffect, useState } from "react";
 import PhoneInput from "react-phone-number-input";
 import { formCreateUserSchema } from "@/constants/create-user-schema";
-
-const loader = new Loader({
-  apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY!,
-  version: "weekly",
-  libraries: ["places", "marker"],
-});
+import Image from "next/image";
+import { School } from "@prisma/client";
+import { NextResponse } from "next/server";
 
 export function ProfileForm() {
   const [isMounted, setIsMounted] = useState(false);
   const [cccd, setCccd] = useState<string>("");
+  const [schools, setSchools] = useState<School[]>([]);
+  useEffect(() => {
+    const fetchSchools = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/schools");
+        const data = await response.json();
+        setSchools(data);
+      } catch (error) {
+        console.error("không tìm thấy trường học", error);
+      }
+    };
+    fetchSchools();
+  }, []);
 
   const router = useRouter();
 
@@ -65,51 +74,28 @@ export function ProfileForm() {
       gender: "",
       cccd: "",
       email: "",
-      certificateCategory: "",
-      schoolCategory: "",
       description: "",
+      schoolName: "",
+      schoolCategory: "",
+      password: "",
+      certificateCategory: "",
     },
   });
 
   const { isSubmitting, isValid } = form.formState;
-
   const onSubmit = async (values: z.infer<typeof formCreateUserSchema>) => {
     try {
-      await axios.post("/api/users", values);
-
+      await axios.post("http://localhost:3000/api/users", {
+        ...values,
+      });
       toast.success("Tạo tài khoản thành công");
       form.reset();
     } catch (error) {
-      console.log(error);
       toast.error("Tạo tài khoản thất bại");
     } finally {
       router.refresh();
     }
   };
-
-  const onIdentifierSubmit = async (images: string) => {
-    try {
-      await axios.post("/api/fptai", { images }).then((response) => {
-        if (response.data.message === "Thành công") {
-          setCccd(response.data.name);
-        }
-      });
-
-      toast.success("Thành công");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  loader.importLibrary("places").then(async () => {
-    new google.maps.places.Autocomplete(
-      document.getElementById("address") as HTMLInputElement,
-      {
-        componentRestrictions: { country: ["vn", "us"] },
-        types: ["address"],
-      }
-    );
-  });
 
   if (!isMounted) {
     return <div>Đang tải thông tin...</div>;
@@ -135,6 +121,20 @@ export function ProfileForm() {
                     />
                   </FormControl>
                   <FormDescription>Ví dụ: Nguyễn Văn A</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* Password*/}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mật khẩu</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Nhập mật khẩu..." {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -167,7 +167,7 @@ export function ProfileForm() {
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={field.onChange}
+                        onSelect={(date) => field.onChange(date)} // Đảm bảo rằng bạn đã thiết lập sự kiện onSelect
                         disabled={(date) =>
                           date > new Date() || date < new Date("1900-01-01")
                         }
@@ -276,11 +276,100 @@ export function ProfileForm() {
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Email của tài khoản được chọn phải có thật, và yêu cầu xác
-                    thực trong tương lai để được duyệt
-                  </FormDescription>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* Chứng chỉ*/}
+            <FormField
+              control={form.control}
+              name="certificateCategory"
+              render={({ field }) => (
+                <FormItem>
+                  <Select
+                    disabled={isSubmitting}
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Chọn chứng chỉ Tiếng Anh" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="IELTS">IELTS</SelectItem>
+                      <SelectItem value="TOEFL">TOEFL</SelectItem>
+                      <SelectContent></SelectContent>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/*Trình độ học vấn*/}
+            <FormField
+              control={form.control}
+              name="schoolCategory"
+              render={({ field }) => (
+                <FormItem>
+                  <Select
+                    disabled={isSubmitting}
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormLabel>Trình độ học vấn</FormLabel>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Chọn trình độ học vấn" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Bậc trung học phổ thông">
+                        Bậc trung học phổ thông
+                      </SelectItem>
+                      <SelectItem value="Bậc cao đẳng">Bậc cao đẳng</SelectItem>
+                      <SelectItem value="Bậc đại học">Bậc đại học</SelectItem>
+                    </SelectContent>
+                    <FormMessage />
+                  </Select>
+                </FormItem>
+              )}
+            />
+            {/*Trường học*/}
+            <FormField
+              control={form.control}
+              name="schoolName"
+              render={({ field }) => (
+                <FormItem>
+                  <Select
+                    disabled={isSubmitting}
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormLabel>Trường học</FormLabel>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Chọn trường học" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {schools.map((school) => (
+                        <div className="flex items-center" key={school.id}>
+                          <Image
+                            width={16}
+                            height={16}
+                            alt="logoschool"
+                            src={school.logoUrl}
+                            className="mr-2"
+                          />
+                          <SelectItem value={school.name}>
+                            {school.name}
+                          </SelectItem>
+                        </div>
+                      ))}
+                    </SelectContent>
+                    <FormMessage />
+                  </Select>
                 </FormItem>
               )}
             />
@@ -302,7 +391,6 @@ export function ProfileForm() {
                 </FormItem>
               )}
             />
-
             <Button disabled={isSubmitting || !isValid} type="submit">
               Tạo tài khoản
             </Button>

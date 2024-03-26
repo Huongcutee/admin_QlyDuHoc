@@ -1,9 +1,6 @@
 import db from "@/lib/db";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { randomUUID } from "crypto";
-import verifyEmail from "@/templates/verifyEmailTemplate";
-import { sendMail } from "@/service/mailService";
 import { formCreateUserSchema } from "@/constants/create-user-schema";
 
 const jwt = require("jsonwebtoken");
@@ -14,9 +11,6 @@ export async function POST(req: Request) {
     const body = await req.json();
 
     const { dob: birth } = body;
-
-    console.log(typeof body.dob);
-    console.log(body.dob);
 
     if (typeof birth === "string") {
       body.dob = new Date(birth);
@@ -46,7 +40,7 @@ export async function POST(req: Request) {
 
     if (existUser) {
       return new NextResponse("Người dùng với email này đã tồn tại", {
-        status: 403,
+        status: 403, // Ma~ 403 neh
       });
     }
 
@@ -75,43 +69,9 @@ export async function POST(req: Request) {
         userId: user.id,
       },
     });
-
-    const confirmToken = jwt.sign(
-      { email: user.email },
-      process.env.JWT_SECRET_KEY,
-      {
-        expiresIn: "30m",
-      }
-    );
-
-    const otp = otpGenerator.generate(6, {
-      upperCaseAlphabets: false,
-      specialChars: false,
-    });
-
-    const token = await db.activateToken.create({
-      data: {
-        otp,
-        expiresAt: new Date(Date.now() + 60 * 30 * 1000),
-        token: confirmToken,
-        userId: user.id,
-      },
-    });
-
-    const emailTemplate = verifyEmail(token.id, token.token, token.otp);
-
-    const options = {
-      to: user.email,
-      subject: "Xác thực email để tiếp tục",
-      text: emailTemplate.text,
-      html: emailTemplate.html,
-    };
-
-    await sendMail({ options });
-
     return NextResponse.json(user);
   } catch (error) {
-    console.log(error);
+    console.log("************" + error);
     return new NextResponse(`Đăng ký thất bại ${error}`, { status: 500 });
   }
 }
@@ -122,7 +82,6 @@ export async function GET(req: Request) {
 
     return NextResponse.json(users);
   } catch (error) {
-    console.log(error);
     return new NextResponse("Lấy người dùng thất bại", { status: 500 });
   }
 }

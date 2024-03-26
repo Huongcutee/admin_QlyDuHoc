@@ -34,10 +34,8 @@
     "@types/express": "^4.17.21",
     "@types/form-data": "^2.5.0",
     "@types/jsonwebtoken": "^9.0.5",
-    "@types/node": "20.9.2",
     "@types/node-fetch": "^2.6.9",
     "@types/nodemailer": "^6.4.14",
-    "@types/react": "18.2.37",
     "@types/react-dom": "18.2.15",
     "@types/react-phone-number-input": "^3.0.17",
     "@uploadthing/react": "^6.0.0",
@@ -53,7 +51,7 @@
     "form-data": "^4.0.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.292.0",
-    "next": "^14.0.3",
+    "next": "^14.2.0-canary.43",
     "next-auth": "^4.24.5",
     "next-themes": "^0.2.1",
     "nodemailer": "^6.9.7",
@@ -82,6 +80,8 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/node": "^20.11.30",
+    "@types/react": "^18.2.71",
     "@types/react-stars": "^2.2.4",
     "prisma": "^5.6.0"
   }
