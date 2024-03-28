@@ -1,15 +1,16 @@
 "use client";
 
-import { User } from "@prisma/client";
+import { Student, User } from "@prisma/client";
 import React from "react";
 import { AiFillCheckCircle, AiOutlineMail } from "react-icons/ai";
 import { HiAcademicCap } from "react-icons/hi";
 
 interface Props {
   users: User[];
+  students: Student[];
 }
 
-function DashBoardStatsGrid({ users }: Props) {
+function DashBoardStatsGrid({ users }: Props, { students }: Props) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full mt-5 px-3">
       <BoxWrapper>
@@ -66,9 +67,7 @@ function DashBoardStatsGrid({ users }: Props) {
             Số lượng học sinh
           </span>
           <div className="flex items-center">
-            <strong className="text-xl text-gray-700 dark:text-white font-semibold">
-              25346
-            </strong>
+            <strong className="text-xl text-gray-700 dark:text-white font-semibold"></strong>
           </div>
         </div>
       </BoxWrapper>

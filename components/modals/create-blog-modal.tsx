@@ -28,6 +28,8 @@ import {
   SelectValue,
 } from "../ui/select";
 import Image from "next/image";
+import { Input } from "postcss";
+import { fi } from "date-fns/locale";
 
 export const BlogModal = () => {
   const router = useRouter();
@@ -45,7 +47,6 @@ export const BlogModal = () => {
       description: "",
     },
   });
-
   if (!school) {
     return null;
   }
@@ -53,17 +54,24 @@ export const BlogModal = () => {
   if (!students) return null;
 
   const { isLoading, isValid, isSubmitting } = form.formState;
-
   const onSubmit = async (values: z.infer<typeof formCreateBlogSchema>) => {
-    try {
-      await axios.post(`/api/schools/${school?.name}/blogs`, values);
+    await callapi(values);
+  };
 
-      router.refresh();
+  const callapi = async (values: z.infer<typeof formCreateBlogSchema>) => {
+    try {
+      await axios.post(
+        `http://localhost:3000/api/schools/${school?.name}/blogs`,
+        {
+          ...values,
+        }
+      );
       toast.success("Thêm blogs thành công");
       form.reset();
+      router.refresh();
+      onClose();
     } catch (error) {
       toast.error("Thêm blogs thất bại " + error);
-    } finally {
       onClose();
     }
   };
@@ -78,7 +86,31 @@ export const BlogModal = () => {
       <div>
         <div className="py-2 pb-4">
           <Form {...form}>
+            <FormMessage />
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              {/*Trường học*/}
+              <FormField
+                control={form.control}
+                name="schoolId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Trường học</FormLabel>
+                    <Select
+                      disabled={isSubmitting}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Chọn trường học" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={school.id}>{school.name}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+              {/*Người Tạo*/}
               <FormField
                 control={form.control}
                 name="studentId"
@@ -122,16 +154,17 @@ export const BlogModal = () => {
                   </FormItem>
                 )}
               />
+              {/*Nội dung blogs*/}
               <FormField
                 control={form.control}
                 name="description"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Nội dung blog</FormLabel>
-                    <FormControl>
+                    <FormControl className="h-11">
                       <Editor {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="h-12" />
                   </FormItem>
                 )}
               />

@@ -17,9 +17,11 @@ export default async function Home() {
     },
   });
 
+  const students = await db.student.findMany();
+
   return (
     <>
-      <DashBoardStatsGrid users={users} />
+      <DashBoardStatsGrid users={users} students={students} />
       <TransactionChart />
     </>
   );

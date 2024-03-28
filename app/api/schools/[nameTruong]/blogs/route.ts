@@ -8,12 +8,6 @@ export async function POST(
   { params }: { params: { nameTruong: string } }
 ) {
   try {
-    const currentUser = await getCurrentUser();
-
-    if (!currentUser) {
-      return new NextResponse("Chưa xác thực", { status: 401 });
-    }
-
     if (!params.nameTruong) {
       return new NextResponse("Không tìm thấy mã trường học", { status: 404 });
     }

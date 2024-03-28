@@ -71,7 +71,6 @@ export async function POST(req: Request) {
     });
     return NextResponse.json(user);
   } catch (error) {
-    console.log("************" + error);
     return new NextResponse(`Đăng ký thất bại ${error}`, { status: 500 });
   }
 }

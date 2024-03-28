@@ -27,7 +27,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json(school);
   } catch (error) {
-    console.log("CREATE USER", error);
     return new NextResponse(`Tạo trường học thất bại ${error}`, {
       status: 500,
     });

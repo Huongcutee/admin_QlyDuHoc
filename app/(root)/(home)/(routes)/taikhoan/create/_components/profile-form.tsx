@@ -40,7 +40,6 @@ import PhoneInput from "react-phone-number-input";
 import { formCreateUserSchema } from "@/constants/create-user-schema";
 import Image from "next/image";
 import { School } from "@prisma/client";
-import { NextResponse } from "next/server";
 
 export function ProfileForm() {
   const [isMounted, setIsMounted] = useState(false);
