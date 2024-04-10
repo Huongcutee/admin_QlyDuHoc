@@ -1,5 +1,4 @@
 "use client";
-import db from "@/lib/db";
 import Link from "next/link";
 import { ArrowLeft, Trash } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -10,11 +9,7 @@ import { Contact } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { ConfirmModal } from "@/components/modals/confirm-modal";
 
-export const ContactComponent = ({
-  params,
-}: {
-  params: { contactId: String };
-}) => {
+const ContactComponent = ({ params }: { params: { contactId: String } }) => {
   const router = useRouter();
   const [contact, setContact] = useState<Contact | null>(null);
 
@@ -40,7 +35,7 @@ export const ContactComponent = ({
     }
   };
 
-  return contact ? (
+  return (
     <div className="m-10 font-semibold bg-gray-200 p-4 w-auto rounded-lg">
       <div className="flex justify-between">
         <div>
@@ -95,10 +90,6 @@ export const ContactComponent = ({
           </tr>
         </tbody>
       </table>
-    </div>
-  ) : (
-    <div>
-      <p>Đang load dữ liệu....</p>
     </div>
   );
 };
