@@ -3,7 +3,7 @@ import db from "@/lib/db";
 import { redirect } from "next/navigation";
 import Banner from "@/components/banner";
 import { IconBadge } from "@/components/icon-badge";
-import { ArrowLeft, LayoutDashboard } from "lucide-react";
+import { AlignRight, ArrowLeft, LayoutDashboard } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import TitleForm from "./_components/title-form";
 import AuthorForm from "./_components/author-form";
@@ -34,17 +34,22 @@ const NewsIdPage = async ({ params }: { params: { tintucId: string } }) => {
 
   return (
     <>
-      <div className="flex items-center justify-end">
-        <Actions tintucId={params.tintucId} disabled={false} news={news} />
-      </div>
-      <div className="bg-slate-100 border shadow-md p-2 mt-5">
-        <Link
-          href={`/tintuc`}
-          className="flex items-center text-sm hover:opacity-75 transition mb-6"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Quay về trang Tin tức
-        </Link>
+      <div className="bg-slate-100 border shadow-md p-2">
+        <div className="flex justify-between">
+          <div>
+            <Link
+              href={`/tintuc`}
+              className="flex items-center text-sm hover:opacity-75 transition mb-6"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Quay về trang Tin tức
+            </Link>
+          </div>
+          <div>
+            <Actions tintucId={params.tintucId} disabled={false} news={news} />
+          </div>
+        </div>
+
         <div className="flex items-center gap-x-2">
           <IconBadge icon={LayoutDashboard} />
           <div className="flex flex-col gap-y-2">

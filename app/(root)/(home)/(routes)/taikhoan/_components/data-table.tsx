@@ -113,12 +113,14 @@ export function DataTable<TData, TValue>({
               })}
           </DropdownMenuContent>
         </DropdownMenu>
+
         <Link href={"/taikhoan/create"} className="ml-auto">
           <Button>
             <PlusCircle className="h-4 w-4 mr-2" />
             Tạo tài khoản
           </Button>
         </Link>
+        
       </div>
       <div className="rounded-md border">
         <Table>

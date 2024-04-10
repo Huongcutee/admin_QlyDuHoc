@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { User, UserRole } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
@@ -97,7 +96,10 @@ export const columns: ColumnDef<User>[] = [
     },
   },
   {
-    id: "actions",
+    accessorKey: "actions",
+    header: () => {
+      return <>Tùy chọn</>;
+    },
     cell: ({ row }) => {
       const { id } = row.original;
 
@@ -105,7 +107,6 @@ export const columns: ColumnDef<User>[] = [
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant={"ghost"} className="h-4 w-8 p-0">
-              <span className="sr-only"></span>
               <MoreHorizontal className="h4 w-4" />
             </Button>
           </DropdownMenuTrigger>

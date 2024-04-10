@@ -48,7 +48,7 @@ export function ProfileForm() {
   useEffect(() => {
     const fetchSchools = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/schools");
+        const response = await fetch("/api/schools");
         const data = await response.json();
         setSchools(data);
       } catch (error) {
@@ -84,7 +84,7 @@ export function ProfileForm() {
   const { isSubmitting, isValid } = form.formState;
   const onSubmit = async (values: z.infer<typeof formCreateUserSchema>) => {
     try {
-      await axios.post("http://localhost:3000/api/users", {
+      await axios.post("/api/users", {
         ...values,
       });
       toast.success("Tạo tài khoản thành công");

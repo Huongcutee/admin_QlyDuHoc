@@ -177,4 +177,3 @@ export type StudentProfile = Student & {
 export type BlogFull = Blog & {
   student: StudentProfile;
 };
-// loc test commit

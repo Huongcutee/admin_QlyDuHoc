@@ -1,7 +1,5 @@
 "use client";
-
 import * as React from "react";
-
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -34,6 +32,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { PlusCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -67,12 +66,15 @@ export function DataTable<TData, TValue>({
       columnVisibility,
     },
   });
-
+  const router = useRouter();
+  React.useEffect(() => {
+    router.refresh();
+  }, []);
   return (
     <div>
       <div className="flex items-center py-4 justify-between gap-x-2">
         <Input
-          placeholder="Bộ lọc Người liên hệ"
+          placeholder="Bộ lọc người liên hệ..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
@@ -103,6 +105,7 @@ export function DataTable<TData, TValue>({
                     {column.id === "phoneNumber" && "Số điện thoại"}
                     {column.id === "createdAt" && "Ngày gửi"}
                     {column.id === "title" && "Tiêu đề"}
+                    {column.id === "actions" && "Tùy chọn"}
                   </DropdownMenuCheckboxItem>
                 );
               })}

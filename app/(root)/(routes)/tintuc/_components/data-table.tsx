@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { PlusCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -63,6 +64,11 @@ export function DataTable<TData, TValue>({
       columnVisibility,
     },
   });
+  const router = useRouter();
+  React.useEffect(() => {
+    router.refresh();
+  }, []);
+
   return (
     <div>
       <div className="flex items-center py-4 justify-between gap-x-2">
@@ -76,7 +82,7 @@ export function DataTable<TData, TValue>({
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline">Trường dữ liệu</Button>
+            <Button variant="outline">Hiển thị</Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             {table
@@ -95,6 +101,8 @@ export function DataTable<TData, TValue>({
                     {column.id === "titlenews" && "Tên bài viết"}
                     {column.id === "author" && "Tác giả"}
                     {column.id === "imageNews" && "Hình ảnh"}
+                    {column.id === "createdAt" && "Thời gian"}
+                    {column.id === "actions" && "Tùy chọn"}
                   </DropdownMenuCheckboxItem>
                 );
               })}

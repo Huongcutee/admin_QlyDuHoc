@@ -1,20 +1,16 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { News, User, UserRole } from "@prisma/client";
+import { News } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal, Pencil } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 import Image from "next/image";
@@ -50,7 +46,7 @@ export const columns: ColumnDef<News>[] = [
   },
   {
     accessorKey: "imageNews",
-    header: ({ column }) => {
+    header: () => {
       return <Button variant={"ghost"}>Hình ảnh</Button>;
     },
     cell: ({ row }) => {
@@ -70,7 +66,15 @@ export const columns: ColumnDef<News>[] = [
   {
     accessorKey: "createdAt",
     header: ({ column }) => {
-      return <Button variant={"ghost"}>Thời gian</Button>;
+      return (
+        <Button
+          variant={"ghost"}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Thời gian
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
     },
     cell: ({ row }) => (
       <div>
@@ -80,14 +84,16 @@ export const columns: ColumnDef<News>[] = [
   },
 
   {
-    id: "actions",
+    accessorKey: "actions",
+    header: () => {
+      return <p>Tùy chọn</p>;
+    },
     cell: ({ row }) => {
       const { id } = row.original;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant={"ghost"} className="h-4 w-8 p-0">
-              <span className="sr-only">Tùy chọn</span>
               <MoreHorizontal className="h4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -95,7 +101,7 @@ export const columns: ColumnDef<News>[] = [
             <Link href={`/tintuc/edit/${id}`}>
               <DropdownMenuItem>
                 <Pencil className="h-4 w-4 mr-2" />
-                Sửa chi tiết tin tức
+                Xem thông chi tiết
               </DropdownMenuItem>
             </Link>
           </DropdownMenuContent>

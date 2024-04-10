@@ -3,13 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { Contact, User, UserRole } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal, Pencil } from "lucide-react";
+import { ArrowUpDown, Ghost, MoreHorizontal, Pencil } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
@@ -48,7 +46,15 @@ export const columns: ColumnDef<Contact>[] = [
   {
     accessorKey: "phoneNumber",
     header: ({ column }) => {
-      return <Button variant={"ghost"}>Số điện thoại</Button>;
+      return (
+        <Button
+          variant={"ghost"}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          SDT
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
     },
   },
   {
@@ -68,7 +74,15 @@ export const columns: ColumnDef<Contact>[] = [
   {
     accessorKey: "createdAt",
     header: ({ column }) => {
-      return <Button variant={"ghost"}>Thời gian</Button>;
+      return (
+        <Button
+          variant={"ghost"}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Thời gian
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
     },
     cell: ({ row }) => (
       <div>
@@ -78,15 +92,17 @@ export const columns: ColumnDef<Contact>[] = [
   },
 
   {
-    id: "actions",
+    accessorKey: "actions",
+    header: () => {
+      return <p className="hover:text-black hover:cursor-pointer">Tùy chọn</p>;
+    },
     cell: ({ row }) => {
       const { id } = row.original;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant={"ghost"} className="h-4 w-8 p-0">
-              <span className="sr-only">Tùy chọn</span>
-              <MoreHorizontal className="h4 w-4" />
+            <Button variant={"ghost"} className="h-4 w-8 p-0 ml-7">
+              <MoreHorizontal className="h4 w-4 " />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
