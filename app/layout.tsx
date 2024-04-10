@@ -20,7 +20,7 @@ export default function RootLayout({
         <ToastProvider />
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
